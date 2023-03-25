@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import "./Navigation.css";
 
 import { styled, alpha } from "@mui/material/styles";
@@ -14,6 +12,7 @@ import Link from "@mui/material/Link";
 
 import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,19 +57,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navigation({ userStatus, setUserStatus }) {
+  const navigate = useNavigate();
+
+  const basicAlign = {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+  };
+
+  const handleLogOut = () => {
+    if (Object.keys(localStorage).includes("token")) {
+      localStorage.removeItem("token");
+    }
+    setUserStatus({ ...userStatus, isLogin: false });
+    navigate("/login");
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar position="static" sx={{ backgroundColor: "#3f51b5" }}>
           <Toolbar>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "start",
-                width: "100%",
-              }}
-            >
+            <Box sx={[basicAlign, { justifyContent: "start" }]}>
               <IconButton
                 size="large"
                 edge="start"
@@ -89,14 +97,7 @@ export default function Navigation({ userStatus, setUserStatus }) {
               </Typography>
             </Box>
             {userStatus.isLogin && (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
-                }}
-              >
+              <Box sx={[basicAlign, { justifyContent: "center" }]}>
                 <Search>
                   <SearchIconWrapper>
                     <SearchIcon />
@@ -108,14 +109,7 @@ export default function Navigation({ userStatus, setUserStatus }) {
                 </Search>
               </Box>
             )}
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "end",
-                width: "100%",
-              }}
-            >
+            <Box sx={[basicAlign, { justifyContent: "end" }]}>
               {!userStatus.isLogin && (
                 <Link href="\login" color="inherit" sx={{ mx: 2 }}>
                   Login
@@ -137,7 +131,11 @@ export default function Navigation({ userStatus, setUserStatus }) {
 
               {/* LOGOUT button */}
               {userStatus.isLogin && (
-                <Button variant="contained" color="secondary">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleLogOut}
+                >
                   LOGOUT
                 </Button>
               )}

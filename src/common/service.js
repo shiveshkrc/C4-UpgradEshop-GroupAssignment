@@ -2,9 +2,17 @@ import { APIURL } from "./url";
 import axios from "axios";
 
 export function userSignUp(data) {
-  axios.post(`${APIURL}/users`, data);
+  return axios.post(`${APIURL}/auth/signup`, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 export function userSignIn(data) {
-  axios.post(`${APIURL}/auth/signin`, data);
+  return axios.post(`${APIURL}/auth/signin`, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
